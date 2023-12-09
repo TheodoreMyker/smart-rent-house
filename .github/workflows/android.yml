@@ -1,10 +1,12 @@
-name: Android CI
+name: AndroidCI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
@@ -12,15 +14,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - name: Checkout repository😊
+        uses: actions/checkout@v2
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Set up JDK 17🖥️
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew🐧
+        run: chmod +x ./gradlew
+
+      - name: Create 💡local.properties🔎
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Install dependencies😎🎶
+        run: ./gradlew dependencies
+
+      - name: Run tests🔥🎉
+        run: ./gradlew test
+
+      - name: Mutation testing🚀
+        run: ./gradlew pitest
